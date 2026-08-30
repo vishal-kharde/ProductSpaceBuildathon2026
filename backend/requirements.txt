@@ -1,0 +1,9 @@
+fastapi==0.141.1
+uvicorn[standard]>=0.35,<1
+python-multipart>=0.0.20,<1
+pymupdf>=1.26,<2
+python-docx>=1.2,<2
+pydantic>=2.11,<3
+pydantic-settings>=2.10,<3
+google-genai>=2.3.0,<3
+httpx>=0.28,<1
