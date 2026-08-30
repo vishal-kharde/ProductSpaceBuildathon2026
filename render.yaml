@@ -4,72 +4,98 @@ services:
     runtime: docker
     plan: free
     region: singapore
-    rootDir: backend
-    dockerfilePath: ./Dockerfile
+
+    dockerfilePath: ./backend/Dockerfile
     dockerContext: .
+
     healthCheckPath: /api/health
     autoDeployTrigger: commit
+
     envVars:
       - key: GEMINI_API_KEY
         sync: false
+
       - key: BIDLENS_USERNAME
         value: admin
+
       - key: BIDLENS_PASSWORD
         sync: false
+
       - key: AUTH_SECRET
         generateValue: true
+
       - key: GEMINI_MODELS
-        value: gemini-3.6-flash,gemini-3.5-flash,gemini-3.1-flash-lite,gemini-1.6-pro-flash
+        value: gemini-3.5-flash,gemini-3.1-flash-lite,gemini-flash-lite-latest
+
       - key: GEMINI_MODEL
-        value: gemini-3.6-flash
+        value: gemini-3.5-flash
+
       - key: MAX_OUTPUT_TOKENS
         value: "65536"
+
       - key: TOP_P
         value: "0.95"
+
       - key: THINKING_LEVEL
         value: medium
+
       - key: AI_RETRIES
         value: "2"
+
       - key: AI_RETRY_DELAY_SECONDS
         value: "0.5"
+
       - key: AI_MAX_WORKERS
         value: "8"
+
       - key: AI_KEY_WAIT_SECONDS
         value: "60"
+
       - key: LOG_LEVEL
         value: INFO
+
       - key: DB_PATH
         value: /tmp/bidlens.db
+
       - key: CORS_ORIGINS
         fromService:
-          name: bidlens-frontend
           type: web
+          name: bidlens-frontend
           envVarKey: RENDER_EXTERNAL_URL
 
   - type: web
     name: bidlens-frontend
     runtime: static
+
     rootDir: frontend
+
     buildCommand: npm ci && npm run build
+
     staticPublishPath: dist
+
     autoDeployTrigger: commit
+
     envVars:
       - key: VITE_API_URL
         fromService:
-          name: bidlens-backend
           type: web
+          name: bidlens-backend
           envVarKey: RENDER_EXTERNAL_URL
+
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
+
     headers:
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
+
       - path: /*
         name: X-Frame-Options
         value: DENY
+
       - path: /*
         name: Referrer-Policy
         value: strict-origin-when-cross-origin

@@ -32,6 +32,13 @@ def startup():
     init_db()
     log.info("BidLens started; models=%s gemini_key_count=%s max_workers=%s", settings.model_priority(), len(settings.api_keys()), settings.ai_max_workers)
 
+@app.get("/")
+def root():
+    return {
+        "service": "BidLens",
+        "status": "ok"
+    }
+
 @app.get("/api/health")
 def health():
     return {"ok": True, "models": settings.model_priority(), "gemini_key_count": len(settings.api_keys()), "max_workers": settings.ai_max_workers}
